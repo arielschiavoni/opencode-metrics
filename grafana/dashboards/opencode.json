@@ -140,7 +140,6 @@
       "id": 11,
       "gridPos": { "x": 0, "y": 6, "w": 16, "h": 9 },
       "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "interval": "1d",
       "options": {
         "legend": { "displayMode": "list", "placement": "bottom" },
         "tooltip": { "mode": "multi" }
@@ -188,7 +187,6 @@
       "id": 13,
       "gridPos": { "x": 0, "y": 15, "w": 16, "h": 9 },
       "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "interval": "1d",
       "options": {
         "legend": { "displayMode": "list", "placement": "bottom" },
         "tooltip": { "mode": "multi" }
@@ -244,7 +242,6 @@
       "id": 21,
       "gridPos": { "x": 0, "y": 25, "w": 16, "h": 9 },
       "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "interval": "1d",
       "options": {
         "legend": { "displayMode": "list", "placement": "bottom" },
         "tooltip": { "mode": "multi" }
@@ -292,7 +289,6 @@
       "id": 23,
       "gridPos": { "x": 0, "y": 34, "w": 16, "h": 9 },
       "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "interval": "1d",
       "options": {
         "legend": { "displayMode": "list", "placement": "bottom" },
         "tooltip": { "mode": "multi" }
