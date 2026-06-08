@@ -2,7 +2,12 @@ services:
   metrics-exporter:
     build: ./metrics
     volumes:
+      # SQLite WAL mode uses three files: the main DB, a WAL (Write-Ahead Log) for new writes,
+      # and a SHM (Shared Memory) index. All three must be mounted separately to prevent
+      # virtiofs inode caching issues on macOS/Podman that can hide new data.
       - ${HOME}/.local/share/opencode/opencode.db:/data/opencode.db:ro
+      - ${HOME}/.local/share/opencode/opencode.db-wal:/data/opencode.db-wal:ro
+      - ${HOME}/.local/share/opencode/opencode.db-shm:/data/opencode.db-shm:ro
       - metrics_state:/state
     environment:
       - OPENCODE_DB=/data/opencode.db
