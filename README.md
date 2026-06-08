@@ -19,7 +19,7 @@ docker compose up -d
 
 This starts three services:
 
-- **Grafana**: http://localhost:3000 (default login: `admin` / `admin`)
+- **Grafana**: http://localhost:3100 (default login: `admin` / `admin`)
 - **Prometheus**: http://localhost:9090
 
 The metrics exporter automatically begins polling your OpenCode database and pushing metrics to Prometheus every 60 seconds.
