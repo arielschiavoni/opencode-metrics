@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+# Accept samples up to 300 days old — covers full opencode history from Nov 2025.
+# This is a config file option in Prometheus 3.x (not a CLI flag).
+storage:
+  tsdb:
+    out_of_order_time_window: 300d
+
+# No scrape jobs needed — the metrics-exporter pushes via remote write.
+# remote-write-receiver is enabled via --web.enable-remote-write-receiver in docker-compose.yml.
+scrape_configs: []
