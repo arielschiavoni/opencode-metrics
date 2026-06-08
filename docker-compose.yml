@@ -35,6 +35,10 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/opencode.json
+      - GF_DATE_FORMATS_INTERVAL_HOUR=DD/MM HH:mm
+      - GF_DATE_FORMATS_INTERVAL_DAY=DD/MM
+      - GF_DATE_FORMATS_INTERVAL_MONTH=MM/YYYY
+      - GF_DATE_FORMATS_FULL_DATE=DD/MM/YYYY HH:mm:ss
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
