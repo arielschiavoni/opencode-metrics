@@ -5,144 +5,389 @@
   "timezone": "browser",
   "refresh": "5m",
   "schemaVersion": 39,
-  "time": { "from": "now/M", "to": "now" },
+  "time": {
+    "from": "now/M",
+    "to": "now"
+  },
   "templating": {
     "list": [
       {
         "name": "provider",
         "label": "Provider",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
         "query": "label_values(opencode_llm_call_cost_usd, provider)",
         "multi": true,
         "includeAll": true,
-        "current": { "text": "All", "value": "$__all" },
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
         "refresh": 2
       },
       {
         "name": "model",
         "label": "Model",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
         "query": "label_values(opencode_llm_call_cost_usd{provider=~\"$provider\"}, model)",
         "multi": true,
         "includeAll": true,
-        "current": { "text": "All", "value": "$__all" },
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
         "refresh": 2
       }
     ]
   },
-  "annotations": { "list": [] },
+  "annotations": {
+    "list": []
+  },
   "panels": [
-
     {
       "type": "row",
       "title": "Totals",
       "id": 1,
-      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 1
+      },
       "collapsed": false
     },
     {
       "type": "stat",
       "title": "Sessions",
       "id": 2,
-      "gridPos": { "x": 0, "y": 1, "w": 6, "h": 4 },
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "gridPos": {
+        "x": 0,
+        "y": 1,
+        "w": 4,
+        "h": 4
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "reduceOptions": {
+          "calcs": ["lastNotNull"]
+        },
         "colorMode": "background",
         "graphMode": "none"
       },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "thresholds" },
-          "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
           "unit": "short",
           "decimals": 0
         }
       },
-      "targets": [{ "expr": "sum(sum_over_time(opencode_session_total{provider=~\"$provider\",model=~\"$model\"}[$__range]))", "refId": "A" }]
+      "targets": [
+        {
+          "expr": "sum(sum_over_time(opencode_session_total{provider=~\"$provider\",model=~\"$model\"}[$__range]))",
+          "refId": "A"
+        }
+      ]
     },
     {
       "type": "stat",
-      "title": "Input Tokens",
-      "id": 3,
-      "gridPos": { "x": 6, "y": 1, "w": 6, "h": 4 },
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "title": "Total Tokens",
+      "id": 6,
+      "gridPos": {
+        "x": 4,
+        "y": 1,
+        "w": 4,
+        "h": 4
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "reduceOptions": {
+          "calcs": ["lastNotNull"]
+        },
         "colorMode": "background",
         "graphMode": "none"
       },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "thresholds" },
-          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
           "unit": "short",
           "decimals": 0
         }
       },
-      "targets": [{ "expr": "sum(sum_over_time(opencode_llm_call_tokens{type=\"input\",provider=~\"$provider\",model=~\"$model\"}[$__range]))", "refId": "A" }]
-    },
-    {
-      "type": "stat",
-      "title": "Output Tokens",
-      "id": 4,
-      "gridPos": { "x": 12, "y": 1, "w": 6, "h": 4 },
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"] },
-        "colorMode": "background",
-        "graphMode": "none"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "thresholds" },
-          "thresholds": { "mode": "absolute", "steps": [{ "color": "teal", "value": null }] },
-          "unit": "short",
-          "decimals": 0
+      "targets": [
+        {
+          "expr": "sum(sum_over_time(opencode_llm_call_tokens{provider=~\"$provider\",model=~\"$model\"}[$__range]))",
+          "refId": "A"
         }
-      },
-      "targets": [{ "expr": "sum(sum_over_time(opencode_llm_call_tokens{type=\"output\",provider=~\"$provider\",model=~\"$model\"}[$__range]))", "refId": "A" }]
+      ]
     },
     {
       "type": "stat",
       "title": "Total Cost (USD)",
       "id": 5,
-      "gridPos": { "x": 18, "y": 1, "w": 6, "h": 4 },
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "gridPos": {
+        "x": 0,
+        "y": 6,
+        "w": 6,
+        "h": 4
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "reduceOptions": {
+          "calcs": ["lastNotNull"]
+        },
         "colorMode": "background",
         "graphMode": "none"
       },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "thresholds" },
-          "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }] },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": null
+              }
+            ]
+          },
           "unit": "currencyUSD",
           "decimals": 2
         }
       },
-      "targets": [{ "expr": "sum(sum_over_time(opencode_llm_call_cost_usd{provider=~\"$provider\",model=~\"$model\"}[$__range]))", "refId": "A" }]
+      "targets": [
+        {
+          "expr": "sum(sum_over_time(opencode_llm_call_cost_usd{provider=~\"$provider\",model=~\"$model\"}[$__range]))",
+          "refId": "A"
+        }
+      ]
     },
 
+    {
+      "type": "stat",
+      "title": "Avg Daily Cost (USD)",
+      "id": 25,
+      "gridPos": {
+        "x": 6,
+        "y": 6,
+        "w": 6,
+        "h": 4
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"]
+        },
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              }
+            ]
+          },
+          "unit": "currencyUSD",
+          "decimals": 2
+        }
+      },
+      "targets": [
+        {
+          "expr": "(sum(sum_over_time(opencode_llm_call_cost_usd{provider=~\"$provider\",model=~\"$model\"}[$__range])) / ($__range_s / 86400)) and on() (vector($__range_s) >= 86400)",
+          "refId": "A"
+        }
+      ]
+    },
+
+    {
+      "type": "stat",
+      "title": "Cache Hit Rate",
+      "id": 8,
+      "gridPos": {
+        "x": 8,
+        "y": 1,
+        "w": 4,
+        "h": 4
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"]
+        },
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": null
+              }
+            ]
+          },
+          "unit": "percentunit",
+          "decimals": 1
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(sum_over_time(opencode_llm_call_tokens{type=\"cache_read\",provider=~\"$provider\",model=~\"$model\"}[$__range])) / sum(sum_over_time(opencode_llm_call_tokens{type=~\"cache_read|input\",provider=~\"$provider\",model=~\"$model\"}[$__range]))",
+          "refId": "A"
+        }
+      ]
+    },
+
+    {
+      "type": "text",
+      "id": 9,
+      "title": "",
+      "gridPos": {
+        "x": 0,
+        "y": 5,
+        "w": 12,
+        "h": 1
+      },
+      "options": {
+        "content": "",
+        "mode": "markdown"
+      },
+      "transparent": true,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      }
+    },
+
+    {
+      "type": "piechart",
+      "title": "Token Type Distribution",
+      "id": 7,
+      "gridPos": {
+        "x": 12,
+        "y": 1,
+        "w": 12,
+        "h": 9
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "options": {
+        "pieType": "donut",
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "width": 400,
+          "values": ["value", "percent"]
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (type) (sum_over_time(opencode_llm_call_tokens{provider=~\"$provider\",model=~\"$model\"}[$__range]))",
+          "legendFormat": "{{type}}",
+          "refId": "A"
+        }
+      ]
+    },
     {
       "type": "row",
       "title": "Token Usage",
       "id": 10,
-      "gridPos": { "x": 0, "y": 5, "w": 24, "h": 1 },
+      "gridPos": {
+        "x": 0,
+        "y": 10,
+        "w": 24,
+        "h": 1
+      },
       "collapsed": false
     },
     {
       "type": "timeseries",
       "title": "Tokens by Provider",
       "id": 11,
-      "gridPos": { "x": 0, "y": 6, "w": 16, "h": 9 },
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "gridPos": {
+        "x": 0,
+        "y": 11,
+        "w": 12,
+        "h": 9
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "options": {
-        "legend": { "displayMode": "list", "placement": "bottom" },
-        "tooltip": { "mode": "multi" }
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
       },
       "fieldConfig": {
         "defaults": {
@@ -153,43 +398,81 @@
             "barAlignment": 0,
             "lineWidth": 0,
             "fillOpacity": 80,
-            "stacking": { "mode": "normal", "group": "A" },
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            },
             "spanNulls": false
           }
         }
       },
-      "targets": [{
-        "expr": "sum by (provider) (sum_over_time(opencode_llm_call_tokens{provider=~\"$provider\",model=~\"$model\"}[$__interval]))",
-        "legendFormat": "{{provider}}",
-        "refId": "A"
-      }]
+      "targets": [
+        {
+          "expr": "sum by (provider) (sum_over_time(opencode_llm_call_tokens{provider=~\"$provider\",model=~\"$model\"}[$__interval]))",
+          "legendFormat": "{{provider}}",
+          "refId": "A"
+        }
+      ]
     },
     {
       "type": "piechart",
       "title": "Tokens by Provider (period)",
       "id": 12,
-      "gridPos": { "x": 16, "y": 6, "w": 8, "h": 9 },
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "gridPos": {
+        "x": 12,
+        "y": 11,
+        "w": 12,
+        "h": 9
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "options": {
         "pieType": "donut",
-        "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "width": 400,
+          "values": ["value", "percent"]
+        }
       },
-      "fieldConfig": { "defaults": { "unit": "short", "decimals": 0 } },
-      "targets": [{
-        "expr": "sum by (provider) (sum_over_time(opencode_llm_call_tokens{provider=~\"$provider\",model=~\"$model\"}[$__range]))",
-        "legendFormat": "{{provider}}",
-        "refId": "A"
-      }]
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (provider) (sum_over_time(opencode_llm_call_tokens{provider=~\"$provider\",model=~\"$model\"}[$__range]))",
+          "legendFormat": "{{provider}}",
+          "refId": "A"
+        }
+      ]
     },
     {
       "type": "timeseries",
       "title": "Tokens by Model",
       "id": 13,
-      "gridPos": { "x": 0, "y": 15, "w": 16, "h": 9 },
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "gridPos": {
+        "x": 0,
+        "y": 20,
+        "w": 12,
+        "h": 9
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "options": {
-        "legend": { "displayMode": "list", "placement": "bottom" },
-        "tooltip": { "mode": "multi" }
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
       },
       "fieldConfig": {
         "defaults": {
@@ -200,51 +483,93 @@
             "barAlignment": 0,
             "lineWidth": 0,
             "fillOpacity": 80,
-            "stacking": { "mode": "normal", "group": "A" },
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            },
             "spanNulls": false
           }
         }
       },
-      "targets": [{
-        "expr": "topk(8, sum by (provider, model) (sum_over_time(opencode_llm_call_tokens{provider=~\"$provider\",model=~\"$model\"}[$__interval])))",
-        "legendFormat": "{{provider}}/{{model}}",
-        "refId": "A"
-      }]
+      "targets": [
+        {
+          "expr": "topk(8, sum by (provider, model) (sum_over_time(opencode_llm_call_tokens{provider=~\"$provider\",model=~\"$model\"}[$__interval])))",
+          "legendFormat": "{{provider}}/{{model}}",
+          "refId": "A"
+        }
+      ]
     },
     {
       "type": "piechart",
       "title": "Tokens by Model (period)",
       "id": 14,
-      "gridPos": { "x": 16, "y": 15, "w": 8, "h": 9 },
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "gridPos": {
+        "x": 12,
+        "y": 20,
+        "w": 12,
+        "h": 9
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "options": {
         "pieType": "donut",
-        "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "width": 400,
+          "values": ["value", "percent"]
+        }
       },
-      "fieldConfig": { "defaults": { "unit": "short", "decimals": 0 } },
-      "targets": [{
-        "expr": "topk(8, sum by (provider, model) (sum_over_time(opencode_llm_call_tokens{provider=~\"$provider\",model=~\"$model\"}[$__range])))",
-        "legendFormat": "{{provider}}/{{model}}",
-        "refId": "A"
-      }]
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0
+        }
+      },
+      "targets": [
+        {
+          "expr": "topk(8, sum by (provider, model) (sum_over_time(opencode_llm_call_tokens{provider=~\"$provider\",model=~\"$model\"}[$__range])))",
+          "legendFormat": "{{provider}}/{{model}}",
+          "refId": "A"
+        }
+      ]
     },
-
     {
       "type": "row",
       "title": "Cost",
       "id": 20,
-      "gridPos": { "x": 0, "y": 24, "w": 24, "h": 1 },
+      "gridPos": {
+        "x": 0,
+        "y": 29,
+        "w": 24,
+        "h": 1
+      },
       "collapsed": false
     },
     {
       "type": "timeseries",
       "title": "Cost by Provider (USD)",
       "id": 21,
-      "gridPos": { "x": 0, "y": 25, "w": 16, "h": 9 },
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "gridPos": {
+        "x": 0,
+        "y": 30,
+        "w": 12,
+        "h": 9
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "options": {
-        "legend": { "displayMode": "list", "placement": "bottom" },
-        "tooltip": { "mode": "multi" }
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
       },
       "fieldConfig": {
         "defaults": {
@@ -255,43 +580,81 @@
             "barAlignment": 0,
             "lineWidth": 0,
             "fillOpacity": 80,
-            "stacking": { "mode": "normal", "group": "A" },
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            },
             "spanNulls": false
           }
         }
       },
-      "targets": [{
-        "expr": "sum by (provider) (sum_over_time(opencode_llm_call_cost_usd{provider=~\"$provider\",model=~\"$model\"}[$__interval]))",
-        "legendFormat": "{{provider}}",
-        "refId": "A"
-      }]
+      "targets": [
+        {
+          "expr": "sum by (provider) (sum_over_time(opencode_llm_call_cost_usd{provider=~\"$provider\",model=~\"$model\"}[$__interval]))",
+          "legendFormat": "{{provider}}",
+          "refId": "A"
+        }
+      ]
     },
     {
       "type": "piechart",
       "title": "Cost by Provider (period)",
       "id": 22,
-      "gridPos": { "x": 16, "y": 25, "w": 8, "h": 9 },
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "gridPos": {
+        "x": 12,
+        "y": 30,
+        "w": 12,
+        "h": 9
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "options": {
         "pieType": "donut",
-        "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "width": 400,
+          "values": ["value", "percent"]
+        }
       },
-      "fieldConfig": { "defaults": { "unit": "currencyUSD", "decimals": 2 } },
-      "targets": [{
-        "expr": "sum by (provider) (sum_over_time(opencode_llm_call_cost_usd{provider=~\"$provider\",model=~\"$model\"}[$__range]))",
-        "legendFormat": "{{provider}}",
-        "refId": "A"
-      }]
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 2
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (provider) (sum_over_time(opencode_llm_call_cost_usd{provider=~\"$provider\",model=~\"$model\"}[$__range]))",
+          "legendFormat": "{{provider}}",
+          "refId": "A"
+        }
+      ]
     },
     {
       "type": "timeseries",
       "title": "Cost by Model (USD)",
       "id": 23,
-      "gridPos": { "x": 0, "y": 34, "w": 16, "h": 9 },
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "gridPos": {
+        "x": 0,
+        "y": 39,
+        "w": 12,
+        "h": 9
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "options": {
-        "legend": { "displayMode": "list", "placement": "bottom" },
-        "tooltip": { "mode": "multi" }
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
       },
       "fieldConfig": {
         "defaults": {
@@ -302,88 +665,59 @@
             "barAlignment": 0,
             "lineWidth": 0,
             "fillOpacity": 80,
-            "stacking": { "mode": "normal", "group": "A" },
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            },
             "spanNulls": false
           }
         }
       },
-      "targets": [{
-        "expr": "topk(8, sum by (provider, model) (sum_over_time(opencode_llm_call_cost_usd{provider=~\"$provider\",model=~\"$model\"}[$__interval])))",
-        "legendFormat": "{{provider}}/{{model}}",
-        "refId": "A"
-      }]
+      "targets": [
+        {
+          "expr": "topk(8, sum by (provider, model) (sum_over_time(opencode_llm_call_cost_usd{provider=~\"$provider\",model=~\"$model\"}[$__interval])))",
+          "legendFormat": "{{provider}}/{{model}}",
+          "refId": "A"
+        }
+      ]
     },
     {
       "type": "piechart",
       "title": "Cost by Model (period)",
       "id": 24,
-      "gridPos": { "x": 16, "y": 34, "w": 8, "h": 9 },
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "gridPos": {
+        "x": 12,
+        "y": 39,
+        "w": 12,
+        "h": 9
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "options": {
         "pieType": "donut",
-        "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] }
-      },
-      "fieldConfig": { "defaults": { "unit": "currencyUSD", "decimals": 2 } },
-      "targets": [{
-        "expr": "topk(8, sum by (provider, model) (sum_over_time(opencode_llm_call_cost_usd{provider=~\"$provider\",model=~\"$model\"}[$__range])))",
-        "legendFormat": "{{provider}}/{{model}}",
-        "refId": "A"
-      }]
-    },
-
-    {
-      "type": "row",
-      "title": "Cumulative (selected range)",
-      "id": 30,
-      "gridPos": { "x": 0, "y": 43, "w": 24, "h": 1 },
-      "collapsed": false
-    },
-    {
-      "type": "timeseries",
-      "title": "Cumulative Tokens by Model",
-      "id": 31,
-      "gridPos": { "x": 0, "y": 44, "w": 12, "h": 9 },
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "options": {
-        "legend": { "displayMode": "list", "placement": "bottom" },
-        "tooltip": { "mode": "multi" }
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "decimals": 0,
-          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10, "spanNulls": true }
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "width": 400,
+          "values": ["value", "percent"]
         }
-      },
-      "targets": [{
-        "expr": "topk(8, sum by (provider, model) (sum_over_time(opencode_llm_call_tokens{provider=~\"$provider\",model=~\"$model\"}[$__range])))",
-        "legendFormat": "{{provider}}/{{model}}",
-        "refId": "A"
-      }]
-    },
-    {
-      "type": "timeseries",
-      "title": "Cumulative Cost by Model (USD)",
-      "id": 32,
-      "gridPos": { "x": 12, "y": 44, "w": 12, "h": 9 },
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "options": {
-        "legend": { "displayMode": "list", "placement": "bottom" },
-        "tooltip": { "mode": "multi" }
       },
       "fieldConfig": {
         "defaults": {
           "unit": "currencyUSD",
-          "decimals": 2,
-          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10, "spanNulls": true }
+          "decimals": 2
         }
       },
-      "targets": [{
-        "expr": "topk(8, sum by (provider, model) (sum_over_time(opencode_llm_call_cost_usd{provider=~\"$provider\",model=~\"$model\"}[$__range])))",
-        "legendFormat": "{{provider}}/{{model}}",
-        "refId": "A"
-      }]
+      "targets": [
+        {
+          "expr": "topk(8, sum by (provider, model) (sum_over_time(opencode_llm_call_cost_usd{provider=~\"$provider\",model=~\"$model\"}[$__range])))",
+          "legendFormat": "{{provider}}/{{model}}",
+          "refId": "A"
+        }
+      ]
     }
-
   ]
 }
+
