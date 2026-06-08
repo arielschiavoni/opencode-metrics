@@ -1,4 +1,5 @@
 import { openDb, querySessions, queryMessages } from "./db.ts";
+import type { Database } from "bun:sqlite";
 import { openStateDb, getWatermark, setWatermark } from "./state.ts";
 import { sessionToSeries, messageToSeries } from "./metrics.ts";
 import type { TimeSeries } from "./metrics.ts";
@@ -17,7 +18,7 @@ const POLL_INTERVAL_MS = parseInt(process.env.POLL_INTERVAL_MS ?? "60000", 10);
 // Core processing logic
 // ─────────────────────────────────────────────────────────────
 
-async function processSessions(): Promise<void> {
+async function processSessions(db: Database): Promise<void> {
   const watermark = getWatermark("session");
   const rows = querySessions(db, watermark);
   if (rows.length === 0) return;
@@ -31,7 +32,7 @@ async function processSessions(): Promise<void> {
   console.log(`[sessions] watermark advanced to ${maxTs}`);
 }
 
-async function processMessages(): Promise<void> {
+async function processMessages(db: Database): Promise<void> {
   const watermark = getWatermark("message");
   const rows = queryMessages(db, watermark);
   if (rows.length === 0) return;
@@ -46,15 +47,18 @@ async function processMessages(): Promise<void> {
 }
 
 async function processBatch(): Promise<void> {
+  const db = openDb(OPENCODE_DB);
   const start = Date.now();
   console.log(`\n[${new Date().toISOString()}] Starting export cycle...`);
   try {
-    await processSessions();
-    await processMessages();
+    await processSessions(db);
+    await processMessages(db);
   } catch (err) {
     // Log but don't crash — watermarks are not advanced on failure,
     // so the next cycle will retry from the same position.
     console.error("[error] Export cycle failed:", err);
+  } finally {
+    db.close();
   }
   console.log(`[${new Date().toISOString()}] Cycle complete in ${Date.now() - start}ms`);
 }
@@ -69,10 +73,11 @@ console.log(`  state.db    : ${STATE_DB}`);
 console.log(`  prometheus  : ${PROMETHEUS_URL}/api/v1/write`);
 console.log(`  poll        : ${POLL_INTERVAL_MS}ms`);
 
-const db = openDb(OPENCODE_DB);
 openStateDb(STATE_DB);
 
 // Run immediately on startup (handles full backfill on first run),
 // then poll on a fixed interval.
+// Note: DB connection is opened/closed per cycle to work around Podman virtiofs
+// bind mount caching issues with SQLite WAL files.
 await processBatch();
 setInterval(processBatch, POLL_INTERVAL_MS);
