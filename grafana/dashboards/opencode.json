@@ -3,7 +3,7 @@
   "uid": "opencode",
   "tags": ["opencode"],
   "timezone": "browser",
-  "refresh": "5m",
+  "refresh": "1m",
   "schemaVersion": 39,
   "time": {
     "from": "now/M",
